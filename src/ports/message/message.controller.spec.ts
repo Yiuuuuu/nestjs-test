@@ -5,6 +5,7 @@ import { getLoggerToken, PinoLogger } from "nestjs-pino";
 import { MessageController } from "./message.controller";
 import { MessageInvalidInputError, MessageNotFoundError } from "src/services/message/message.errors";
 import { MessageType } from "src/services/message/message.constants";
+import { MessageDto } from "./message.dto";
 
 describe("MessageController (e2e)", () => {
   let messageController: MessageController;
@@ -32,16 +33,20 @@ describe("MessageController (e2e)", () => {
 
   describe("::getMessageList", () => {
     it("should return an array of all messages", async () => {
-      // TODO
       const response = await messageController.getMessageList();
-
-      expect(response).toEqual(200);
+      // TODO
+      // ...
     });
   });
 
   describe("::getMessageById", () => {
     it("should return the message with the specific id", async () => {
+      // TODO: create record on db
+      // ...
+      const mockObjectId = "637a897ddb86db090aeb2685"; // Dummy random ObjectID
+      const result = await messageController.getMessage(mockObjectId);
       // TODO
+      // ...
     });
 
     it("should throw error when id is not valid", async () => {
@@ -56,14 +61,35 @@ describe("MessageController (e2e)", () => {
   });
 
   describe("::createMessage", () => {
-    it("should craete message", () => {
+    it("should craete message", async () => {
+      const mockMessageDto = {
+        profileId: "foo",
+        userCode: "foo",
+        messageType: MessageType.CUSTOMER_DELIVERY_ARRIVE_LASTMILE,
+      } as MessageDto;
+      const response = await messageController.createMessage(mockMessageDto);
       // TODO
+      // ...
     });
   });
 
   describe("::updateMessage", () => {
     it("should update message with the specific id", async () => {
-      // TODO
+      it("should throw error when id is not valid", async () => {
+        const mockObjectId = "123"; // existed ObjectID
+        // TODO: create record on db
+        // ...
+        const mockMessageDto = {
+          id: "foo",
+          profileId: "foo",
+          userCode: "foo",
+          messageType: MessageType.CUSTOMER_DELIVERY_ARRIVE_LASTMILE,
+          readAt: null,
+        } as MessageDto;
+        const result = messageController.updateMessage(mockObjectId, mockMessageDto);
+        // TODO
+        // ...
+      });
     });
 
     it("should throw error when id is not valid", async () => {
@@ -74,7 +100,7 @@ describe("MessageController (e2e)", () => {
         userCode: "foo",
         messageType: MessageType.CUSTOMER_DELIVERY_ARRIVE_LASTMILE,
         readAt: null,
-      };
+      } as MessageDto;
       await expect(messageController.updateMessage(mockObjectId, mockMessageDto)).rejects.toThrow(
         MessageInvalidInputError
       );
@@ -88,7 +114,7 @@ describe("MessageController (e2e)", () => {
         userCode: "foo",
         messageType: MessageType.CUSTOMER_DELIVERY_ARRIVE_LASTMILE,
         readAt: null,
-      };
+      } as MessageDto;
       await expect(messageController.updateMessage(mockObjectId, mockMessageDto)).rejects.toThrow(
         MessageNotFoundError
       );
