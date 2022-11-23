@@ -1,9 +1,6 @@
 import { IsDate, IsOptional, IsString } from "class-validator";
 
-export class UpdateMessageDto {
-  @IsString()
-  id: string;
-
+export class MessageDto {
   @IsOptional()
   @IsString()
   profileId: string;

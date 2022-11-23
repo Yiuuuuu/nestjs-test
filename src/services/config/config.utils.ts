@@ -7,11 +7,7 @@ import type { MongooseModuleOptions } from "@nestjs/mongoose";
 import { ConfigInvalidEnvError } from "./config.errors";
 
 export function validateConfigEnv(env: Record<string, unknown>) {
-  console.log(env);
-
   const validatedConfig = plainToInstance(ConfigEnvVo, env, { enableImplicitConversion: true });
-
-  // console.log(validatedConfig);
 
   const errorList = validateSync(validatedConfig, { skipMissingProperties: false });
   if (errorList.length > 0) {
@@ -55,7 +51,7 @@ function createMongooseModuleOptions({
   readPreference,
 }: CreateMongooseModuleOptionsArgs) {
   return {
-    uri: `${protocol}://${user ? `${user}:${password}@` : ""}${host}/${dbName}`,
+    uri: `${protocol}://${user ? `${user}:${password}@` : ""}${host}`,
     autoIndex: false,
     readPreference: readPreference ?? "primaryPreferred",
   } as MongooseModuleOptions;

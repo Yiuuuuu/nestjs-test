@@ -1,43 +1,33 @@
-import { Injectable } from "@nestjs/common";
-import { CreateMessageDto } from "./dto/create-message.dto";
-import { UpdateMessageDto } from "./dto/update-message.dto";
-import { MessageType } from "./entities/message.constants";
-import { MessageEntity } from "./entities/message.entity";
-import { MessageRepository } from "../../infras/messageRepository";
+import { HttpStatus, Injectable } from "@nestjs/common";
+import { MessageRepository } from "src/infras/message/message.repository";
+import { MessageEntity } from "./message.entity";
+import { MessageNotFoundError } from "./message.errors";
 
 @Injectable()
 export class MessageService {
   constructor(private readonly messageRepo: MessageRepository) {}
 
-  create(message: CreateMessageDto) {
-    const messageEntity = this.convertToMessage(message);
-    return this.messageRepo.createMessage(messageEntity);
+  async createMessage(message: MessageEntity) {
+    return await this.messageRepo.createMessage(message);
   }
 
-  findAll() {
-    return this.messageRepo.getMessageList();
+  async getMessageList() {
+    return await this.messageRepo.getMessageList();
   }
 
-  findOne(id: string) {
-    return this.messageRepo.getMessage(id);
+  async getMessgae(id: string) {
+    const result = await this.messageRepo.getMessage(id);
+
+    if (!result) throw new MessageNotFoundError("Cannot find a message with this ID!");
+
+    return result;
   }
 
-  update(id: string, message: UpdateMessageDto) {
-    const messageEntity = this.convertToMessage(message);
-    return this.messageRepo.updateMessage(id, messageEntity);
-  }
+  async updateMessage(id: string, message: MessageEntity) {
+    const result = await this.messageRepo.updateMessage(id, message);
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} message`;
-  // }
-  convertToMessage(message: CreateMessageDto | UpdateMessageDto): MessageEntity {
-    const entity: MessageEntity = new MessageEntity();
-    entity.profileId = message.profileId;
-    entity.userCode = message.userCode;
-    entity.messageType = MessageType[message.messageType];
-    entity.readAt = message.readAt;
-    entity.createdAt = new Date();
+    if (!result) throw new MessageNotFoundError("Cannot find a message with this ID!");
 
-    return entity;
+    return result;
   }
 }
