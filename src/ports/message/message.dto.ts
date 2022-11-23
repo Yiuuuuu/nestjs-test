@@ -3,6 +3,10 @@ import { IsDate, IsOptional, IsString } from "class-validator";
 export class MessageDto {
   @IsOptional()
   @IsString()
+  id: string;
+
+  @IsOptional()
+  @IsString()
   profileId: string;
 
   @IsOptional()
@@ -16,4 +20,8 @@ export class MessageDto {
   @IsOptional()
   @IsDate()
   readAt: Date;
+
+  @IsOptional()
+  @IsDate()
+  createdAt: Date;
 }

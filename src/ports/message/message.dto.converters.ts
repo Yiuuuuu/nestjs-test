@@ -1,15 +1,25 @@
-import { MessageType } from "src/services/message/message.constants";
+import { plainToInstance } from "class-transformer";
 import { MessageEntity } from "src/services/message/message.entity";
 import { MessageDto } from "./message.dto";
-import { plainToInstance } from "class-transformer";
 
 export function convertToMessageEntity(message: MessageDto): MessageEntity {
-  const entity: MessageEntity = new MessageEntity();
-  entity.profileId = message.profileId;
-  entity.userCode = message.userCode;
-  entity.messageType = MessageType[message.messageType];
-  entity.readAt = message.readAt;
-  // entity.createdAt = new Date();
+  return plainToInstance(MessageEntity, {
+    id: message.id,
+    userCode: message.userCode,
+    profileId: message.profileId,
+    readAt: message.readAt,
+    createdAt: message.createdAt,
+    messageType: message.messageType,
+  });
+}
 
-  return entity;
+export function convertToMessageDto(message: MessageEntity): MessageDto {
+  return plainToInstance(MessageDto, {
+    id: message.id,
+    userCode: message.userCode,
+    profileId: message.profileId,
+    readAt: message.readAt,
+    createdAt: message.createdAt,
+    messageType: message.messageType,
+  });
 }
