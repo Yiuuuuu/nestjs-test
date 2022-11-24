@@ -1,5 +1,3 @@
-import { HttpException, HttpStatus } from "@nestjs/common";
-
 export enum LogLevel {
   INFO = "info",
   WARN = "warn",
@@ -7,12 +5,12 @@ export enum LogLevel {
   FATAL = "fatal",
 }
 
-export class LoggableError extends HttpException {
+export class LoggableError extends Error {
   logLevel: LogLevel;
   isLogged: boolean;
 
-  constructor(httpStatus: HttpStatus, message?: string, level = LogLevel.ERROR) {
-    super(message, httpStatus);
+  constructor(message?: string, level = LogLevel.ERROR) {
+    super(message);
     this.logLevel = level;
   }
 }

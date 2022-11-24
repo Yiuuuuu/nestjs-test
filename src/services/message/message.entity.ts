@@ -13,6 +13,7 @@ export class MessageEntity {
   userCode?: string;
 
   @IsString()
+  @IsOptional()
   profileId: string;
 
   @IsDate()

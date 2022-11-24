@@ -6,10 +6,18 @@ export type MessageDocument = MessagePo & Document<Types.ObjectId>;
 
 export const MessageCollectionName = "messages";
 
+class UserCode {
+  userCode: string | null;
+}
+
+class ReadAt {
+  readAt: Date | null;
+}
+
 @Schema()
 export class MessagePo {
-  @Prop()
-  userCode?: string | null;
+  @Prop(UserCode)
+  userCode?: UserCode;
 
   @Prop()
   profileId: string;
@@ -18,7 +26,7 @@ export class MessagePo {
   createdAt: Date;
 
   @Prop()
-  readAt?: Date | null;
+  readAt?: ReadAt;
 
   @Prop()
   messageType: string;

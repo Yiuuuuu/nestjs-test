@@ -2,6 +2,8 @@ module.exports = {
   testEnvironment: "node",
   moduleFileExtensions: ["js", "json", "ts"],
   roots: ["<rootDir>/src"],
+  moduleDirectories: ["node_modules"],
+  modulePaths: ["<rootDir>"],
   testMatch: ["**/*.test.ts", "**/*.spec.ts"],
   transform: {
     "^.+\\.(t|j)s?$": ["@swc/jest"],

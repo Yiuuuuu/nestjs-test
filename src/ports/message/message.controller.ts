@@ -1,11 +1,35 @@
-import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  UnprocessableEntityException,
+  UseInterceptors,
+} from "@nestjs/common";
 import { validate } from "class-validator";
-import { MessageInvalidInputError } from "src/services/message/message.errors";
+import {
+  MessageInvalidEntityError,
+  MessageInvalidInputError,
+  MessageNotFoundError,
+  MessageUnknownError,
+} from "src/services/message/message.errors";
 import { MessageService } from "src/services/message/message.service";
+import { HttpExceptionInterceptor } from "src/utils/http-exception/http-exception.interceptor";
 import { MessageDto } from "./message.dto";
 import { convertToMessageDto, convertToMessageEntity } from "./message.dto.converters";
 
 @Controller("message")
+@UseInterceptors(
+  new HttpExceptionInterceptor(MessageInvalidEntityError, UnprocessableEntityException),
+  new HttpExceptionInterceptor(MessageInvalidInputError, BadRequestException),
+  new HttpExceptionInterceptor(MessageNotFoundError, NotFoundException),
+  new HttpExceptionInterceptor(MessageUnknownError, InternalServerErrorException)
+)
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 

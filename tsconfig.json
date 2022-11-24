@@ -10,16 +10,25 @@
     "target": "es2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
+    "incremental": false,
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "traceResolution": true
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"],
+      "~infras/*": ["./src/infras/*"],
+      "~ports/*": ["./src/ports/*"],
+      "~services/*": ["./src/services/*"],
+      "~modules/*": ["./src/modules/*"],
+      "~utils/*": ["./src/utils/*"]
+    }
+  },
+  "ts-node": {
+    "swc": true,
+    "require": ["tsconfig-paths/register"]
   }
 }

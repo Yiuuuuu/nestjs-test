@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { plainToInstance } from "class-transformer";
 import type { Model } from "mongoose";
@@ -14,7 +14,7 @@ export class MessageRepository {
     private readonly messageModel: Model<MessageDocument>
   ) {}
 
-  async createMessage(message: MessageEntity) {
+  async createMessage(message: MessageEntity): Promise<MessageEntity> {
     try {
       const result = await new this.messageModel(message).save();
       return plainToInstance(MessageEntity, {
@@ -29,7 +29,7 @@ export class MessageRepository {
     }
   }
 
-  async getMessageList() {
+  async getMessageList(): Promise<MessageEntity[]> {
     try {
       const result = await this.messageModel.find().sort({ _id: -1 }).lean();
       const res = result.map((item) => {
@@ -47,9 +47,9 @@ export class MessageRepository {
     }
   }
 
-  async getMessage(id: string) {
+  async getMessage(id: string): Promise<MessageEntity> {
+    if (!Types.ObjectId.isValid(id)) throw new BadRequestException("ID format is not correct!");
     try {
-      if (!Types.ObjectId.isValid(id)) throw new MessageInvalidInputError("ID format is not correct!");
       const result = await this.messageModel.findOne({ _id: id }).lean();
       return plainToInstance(MessageEntity, {
         id: result._id,
@@ -63,9 +63,9 @@ export class MessageRepository {
     }
   }
 
-  async updateMessage(id: string, message: MessageEntity) {
+  async updateMessage(id: string, message: MessageEntity): Promise<MessageEntity> {
+    if (!Types.ObjectId.isValid(id)) throw new MessageInvalidInputError("ID format is not correct!");
     try {
-      if (!Types.ObjectId.isValid(id)) throw new MessageInvalidInputError("ID format is not correct!");
       const updatedMessage = this.messageModel.findOneAndUpdate({ _id: id }, message, { new: true });
       const result = await updatedMessage.exec();
       return plainToInstance(MessageEntity, {
